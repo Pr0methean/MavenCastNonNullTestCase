@@ -1,19 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <!-- This plugin will set properties values using dependency information -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <executions>
+            <execution>
+              <goals>
+                <goal>properties</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.6.1</version>
+          <configuration>
+            <!-- Change source and target to 1.7 to create .class files that can be run on a Java 7 JVM -->
+            <source>1.8</source>
+            <target>1.8</target>
+            <fork>true</fork>
+            <compilerArguments>
+              <Xmaxerrs>10000</Xmaxerrs>
+              <Xmaxwarns>10000</Xmaxwarns>
+            </compilerArguments>
+            <annotationProcessors>
+              <!-- Add all the checkers you want to enable here -->
+              <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker
+              </annotationProcessor>
+            </annotationProcessors>
+            <compilerArgs>
+              <!-- location of the annotated JDK, which comes from a Maven dependency -->
+              <arg>-Xbootclasspath/p:${annotatedJdk}</arg>
+              <!-- Uncomment the following line to use the type annotations compiler. -->
+              <!-- <arg>-classpath ${typeAnnotationsJavac}</arg> -->
+            </compilerArgs>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
   <properties>
     <!-- These properties will be set by the Maven Dependency plugin -->
@@ -48,43 +77,4 @@
       <version>2.2.0</version>
     </dependency>
   </dependencies>
-  <pluginManagement>
-    <plugin>
-      <!-- This plugin will set properties values using dependency information -->
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-dependency-plugin</artifactId>
-      <executions>
-        <execution>
-          <goals>
-            <goal>properties</goal>
-          </goals>
-        </execution>
-      </executions>
-    </plugin>
-    <plugin>
-      <artifactId>maven-compiler-plugin</artifactId>
-      <version>3.6.1</version>
-      <configuration>
-        <!-- Change source and target to 1.7 to create .class files that can be run on a Java 7 JVM -->
-        <source>1.8</source>
-        <target>1.8</target>
-        <fork>true</fork>
-        <compilerArguments>
-          <Xmaxerrs>10000</Xmaxerrs>
-          <Xmaxwarns>10000</Xmaxwarns>
-        </compilerArguments>
-        <annotationProcessors>
-          <!-- Add all the checkers you want to enable here -->
-          <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker
-          </annotationProcessor>
-        </annotationProcessors>
-        <compilerArgs>
-          <!-- location of the annotated JDK, which comes from a Maven dependency -->
-          <arg>-Xbootclasspath/p:${annotatedJdk}</arg>
-          <!-- Uncomment the following line to use the type annotations compiler. -->
-          <!-- <arg>-classpath ${typeAnnotationsJavac}</arg> -->
-        </compilerArgs>
-      </configuration>
-    </plugin>
-  </pluginManagement>
 </project>
